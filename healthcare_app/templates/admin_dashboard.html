@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Administrator Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">Administrator Dashboard</h2>
+<div class="bg-white p-6 rounded shadow">
+    <p>Welcome to the Administrator panel.</p>
+    <ul class="list-disc list-inside mt-4 space-y-2">
+        <li><a href="#" class="text-blue-600 hover:underline">Manage Professionals</a></li>
+        <li><a href="#" class="text-blue-600 hover:underline">Register Shifts</a></li>
+        <li><a href="#" class="text-blue-600 hover:underline">Assign Box Availability</a></li>
+        <li><a href="#" class="text-blue-600 hover:underline">Manage Boxes</a></li>
+    </ul>
+</div>
+{% endblock %}
