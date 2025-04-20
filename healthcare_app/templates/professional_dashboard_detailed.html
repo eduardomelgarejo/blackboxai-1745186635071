@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Professional Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">Professional Dashboard</h2>
+
+<div class="bg-white p-6 rounded shadow space-y-8">
+
+    <!-- Perfil del profesional -->
+    <section>
+        <h3 class="text-xl font-semibold mb-2">Perfil del Profesional</h3>
+        <div class="border p-4 rounded">
+            <!-- Profile details here -->
+            <p>Nombre: {{ user.nombre_completo }}</p>
+            <p>Especialidad: {{ user.profesional.especialidad }}</p>
+            <p>Perfil: {{ user.profesional.perfil }}</p>
+        </div>
+    </section>
+
+    <!-- Solicitar cambio de turno -->
+    <section>
+        <h3 class="text-xl font-semibold mb-2">Solicitar Cambio de Turno</h3>
+        <form method="post" action="{% url 'solicitar_cambio_turno' %}" class="space-y-2">
+            {% csrf_token %}
+            <textarea name="motivo" placeholder="Motivo del cambio de turno" required
+                class="w-full border rounded p-2"></textarea>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                Enviar Solicitud
+            </button>
+        </form>
+    </section>
+
+    <!-- Historial de atenciones de los pacientes -->
+    <section>
+        <h3 class="text-xl font-semibold mb-2">Historial de Atenciones de los Pacientes</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full border border-gray-300">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="border px-4 py-2">Paciente</th>
+                        <th class="border px-4 py-2">Fecha</th>
+                        <th class="border px-4 py-2">Motivo</th>
+                        <th class="border px-4 py-2">Diagnóstico</th>
+                        <th class="border px-4 py-2">Tratamiento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for atencion in historial_atenciones %}
+                    <tr>
+                        <td class="border px-4 py-2">{{ atencion.paciente.nombre_completo }}</td>
+                        <td class="border px-4 py-2">{{ atencion.fecha }}</td>
+                        <td class="border px-4 py-2">{{ atencion.motivo }}</td>
+                        <td class="border px-4 py-2">{{ atencion.diagnostico }}</td>
+                        <td class="border px-4 py-2">{{ atencion.tratamiento }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="border px-4 py-2 text-center">No hay atenciones registradas.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Alerta de reserva o de cambio de hora -->
+    <section>
+        <h3 class="text-xl font-semibold mb-2">Alertas de Reserva o Cambio de Hora</h3>
+        <ul class="list-disc list-inside space-y-1">
+            {% for alerta in alertas %}
+            <li>{{ alerta.fecha }} - {{ alerta.mensaje }}</li>
+            {% empty %}
+            <li>No hay alertas.</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <!-- Chat en línea con el paciente -->
+    <section>
+        <h3 class="text-xl font-semibold mb-2">Chat en Línea con el Paciente</h3>
+        <div class="border p-4 rounded max-h-64 overflow-y-auto mb-2">
+            {% for mensaje in chat_mensajes %}
+            <div class="mb-1">
+                <strong>{{ mensaje.emisor.nombre_completo }}:</strong> {{ mensaje.mensaje }}
+                <span class="text-xs text-gray-500">({{ mensaje.fecha_envio }})</span>
+            </div>
+            {% empty %}
+            <p>No hay mensajes.</p>
+            {% endfor %}
+        </div>
+        <form method="post" action="{% url 'enviar_mensaje_chat' %}" class="flex space-x-2">
+            {% csrf_token %}
+            <input type="text" name="mensaje" placeholder="Escribe un mensaje..." required
+                class="flex-grow border rounded p-2" />
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                Enviar
+            </button>
+        </form>
+    </section>
+
+</div>
+{% endblock %}
